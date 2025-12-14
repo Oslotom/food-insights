@@ -10,7 +10,7 @@ import { CategoryPill } from '@/components/CategoryPill';
 import { FilterChips } from '@/components/FilterChips';
 import { FoodDetail } from '@/components/FoodDetail';
 import { AddFoodDialog } from '@/components/AddFoodDialog';
-import { SearchResults } from '@/components/SearchResults';
+import { FoodTile } from '@/components/FoodTile';
 
 const Index = () => {
   const [filters, setFilters] = useState<FilterState>({
@@ -22,20 +22,21 @@ const Index = () => {
     lowFodmap: false,
   });
 
+  const [submittedSearch, setSubmittedSearch] = useState('');
   const [selectedFood, setSelectedFood] = useState<Food | null>(null);
   const [customFoods, setCustomFoods] = useState<Food[]>([]);
   const [addFoodOpen, setAddFoodOpen] = useState(false);
   const { favorites } = useFavorites();
 
   const searchResults = useMemo(() => {
-    if (!filters.search) {
+    if (!submittedSearch) {
       return [];
     }
     const allFoods = [...foods, ...customFoods];
     const matched = allFoods.filter((food) => {
       // Search filter
-      if (filters.search) {
-        const searchLower = filters.search.toLowerCase();
+      if (submittedSearch) {
+        const searchLower = submittedSearch.toLowerCase();
         if (!food.navn.toLowerCase().includes(searchLower) &&
             !food.kategori.toLowerCase().includes(searchLower)) {
           return false;
@@ -73,7 +74,11 @@ const Index = () => {
     });
 
     return matched;
-  }, [filters, favorites, customFoods]);
+  }, [submittedSearch, filters.category, filters.histaminSafe, filters.glutenFree, filters.lactoseFree, filters.lowFodmap, favorites, customFoods]);
+
+  const handleSearch = () => {
+    setSubmittedSearch(filters.search);
+  };
 
   const handleToggleFilter = (filter: keyof Pick<FilterState, 'glutenFree' | 'lactoseFree' | 'histaminSafe' | 'lowFodmap'>) => {
     setFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
@@ -94,21 +99,29 @@ const Index = () => {
         </section>
 
         {/* Search */}
-        <section className="relative mb-4">
+        <section className="mb-4">
           <SearchBar 
             value={filters.search}
             onChange={(value) => setFilters(prev => ({ ...prev, search: value }))}
+            onSearch={handleSearch}
           />
-          <div className="absolute w-full z-10 mt-1">
-            <SearchResults 
-              results={searchResults}
-              onSelect={(food) => {
-                setSelectedFood(food);
-                setFilters(prev => ({...prev, search: ''}));
-              }}
-            />
-          </div>
         </section>
+
+        {/* Search Results */}
+        {submittedSearch && (
+          <section className="mb-6">
+            <h2 className="font-display font-semibold text-foreground mb-3">Søkeresultater</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {searchResults.map((food) => (
+                <FoodTile 
+                  key={food.id}
+                  food={food}
+                  onClick={() => setSelectedFood(food)}
+                />
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Categories */}
         <CategorySection />
