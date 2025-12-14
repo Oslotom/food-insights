@@ -4,8 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Loader2 } from 'lucide-react';
-import { analyzeFoodName } from '@/lib/foodAnalyzer';
+import { Loader2, Sparkles } from 'lucide-react';
 
 interface AddFoodDialogProps {
   open: boolean;
@@ -30,11 +29,17 @@ export function AddFoodDialog({ open, onOpenChange, onAddFood, searchQuery = '' 
 
     setLoading(true);
     try {
-      // Simulate a small delay for better UX
-      await new Promise(resolve => setTimeout(resolve, 500));
+      const response = await fetch('/api/analyze-food', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ foodName: foodName.trim() }),
+      });
 
-      // Use client-side analyzer to get food data
-      const analyzedData = analyzeFoodName(foodName.trim());
+      if (!response.ok) {
+        throw new Error('Failed to analyze food');
+      }
+
+      const analyzedData = await response.json();
       
       const newFood: Food = {
         id: `custom-${Date.now()}`,
@@ -59,7 +64,10 @@ export function AddFoodDialog({ open, onOpenChange, onAddFood, searchQuery = '' 
         <DialogHeader>
           <DialogTitle>Legg til ny matvare</DialogTitle>
           <DialogDescription>
-            Skriv inn matvarens navn, og vi vil analysere den for deg.
+            <span className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-primary" />
+              AI analyserer matvaren og fyller inn riktig informasjon
+            </span>
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
