@@ -17,7 +17,7 @@ export function CategorySection() {
           <Link
             key={cat}
             to={`/category/${encodeURIComponent(cat)}`}
-            className="flex items-center gap-3 p-3 rounded-2xl bg-card hover:shadow-md hover:-translate-y-0.5 transform transition"
+            className="flex items-start gap-3 p-3 rounded-2xl bg-card hover:shadow-md hover:-translate-y-0.5 transform transition"
           >
             <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center text-xl">
               {categoryEmojis[cat] || '🍽️'}

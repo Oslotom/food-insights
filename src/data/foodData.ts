@@ -589,15 +589,12 @@ function parseCSV(csv: string): Food[] {
 
 export const foods: Food[] = (() => {
   const extraCsv = `navn,kategori,underkategori,bearbeidingsgrad,histamin_innhold,histaminfrigjorrer,dao_blokkerende,typisk_reaksjon,inneholder_laktose,mengde_laktose,taltet_ved_laktoseintoleranse,inneholder_gluten,naturlig_glutenfri,trygg_for_coliaki,fodmap_niva,fodmap_typer,sulfitter,salicylater,tilstatt_gjaer,nitritter_nitrater,toleranse_ved_ibs,gassdannende,fiberinnhold,proteinkilde,fettkilde,karbo_kilde,viktige_mikronæringsstoffer,kaloritetthet,,
-Vann (stille),Drikke,Vann,Fersk,Lav,Nei,Nei,Trygg,Nei,,Ja,Nei,Ja,Ja,Lav,,Nei,Lav,Nei,Nei,God,Lav,Lav,Nei,Nei,Nei,"",Lav,,
-Kullsyreholdig vann,Drikke,Vann,Fersk,Lav,Nei,Nei,Trygg,Nei,,Ja,Nei,Ja,Ja,Lav,,Nei,Lav,Nei,Nei,God,Lav,Lav,Nei,Nei,Nei,"",Lav,,
 Brus (kola),Drikke,Brus,Fersk,Middels,Nei,Nei,Kan gi reaksjon hos noen,Nei,,Ja,Nei,Ja,Ja,Middels,,Nei,Middels,Nei,Nei,Variabel,Lav,Lav,Nei,Nei,Ja,"Sukker, fosfor",Høy,,
 Øl (lys lager),Drikke,Øl,Fermentert,Middels,Ja,Nei,Kan frigjøre histamin,Nei,,Ja,Nei,Ja,Ja,Middels,,Ja,Ja,Ja,Nei,Dårlig,Lav,Lav,Nei,Nei,Nei,"Alkohol, karbohydrater",Middels,,
 Vin (rød),Drikke,Vin,Fermentert,Høy,Ja,Nei,Ofte problematisk,Nei,,Ja,Nei,Ja,Ja,Middels,,Ja,Ja,Ja,Nei,Dårlig,Lav,Lav,Nei,Nei,Nei,"Alkohol, polyfenoler",Middels,,
 Cider (eple),Drikke,Cider,Fermentert,Middels,Nei,Nei,Kan gi reaksjon,Nei,,Ja,Nei,Ja,Ja,Middels,,Ja,Ja,Ja,Nei,Variabel,Lav,Lav,Nei,Nei,Ja,"Sukker, C",Middels,,
 Kaffe (filter),Drikke,Kaffe,Fersk,Middels,Nei,Nei,Kan gi symptomer hos sensitive,Nei,,Ja,Nei,Ja,Ja,Lav,,Nei,Lav,Nei,Nei,Variabel,Lav,Lav,Nei,Nei,Nei,"Koffein",Lav,,
 Te (sort),Drikke,Te,Fersk,Middels,Nei,Nei,Kan gi symptomer hos sensitive,Nei,,Ja,Nei,Ja,Ja,Lav,,Nei,Middels,Nei,Nei,Variabel,Lav,Lav,Nei,Nei,Nei,"Koffein, antioksidanter",Lav,,
-Kombucha,Drikke,Kombucha,Fermentert,Høy,Ja,Ja,Ofte problematisk for sensitive,Nei,,Ja,Nei,Ja,Ja,Middels,,Ja,Ja,Ja,Ja,Dårlig,Nei,Nei,Nei,Nei,Nei,"Probiotika, organisk syre",Lav,,
 Eplejuice (presset),Drikke,Juice,Fersk,Middels,Nei,Nei,Kan gi symptomer for noen,Nei,,Ja,Nei,Ja,Ja,Middels,Fruktose,Nei,Middels,Nei,Nei,Variabel,Lav,Lav,Nei,Nei,Ja,"C, sukker",Middels,,
 `;
 

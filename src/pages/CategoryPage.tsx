@@ -62,7 +62,7 @@ const CategoryPage = () => {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             <button
               onClick={() => navigate(`/category/${encodeURIComponent(decodedCategory)}`)}
-              className={`flex items-center gap-3 p-3 rounded-2xl bg-card hover:shadow-md hover:-translate-y-0.5 transform transition ${selectedSub === null ? 'ring-2 ring-primary/30' : ''}`}
+              className={`flex items-start gap-3 p-3 rounded-2xl bg-card hover:shadow-md hover:-translate-y-0.5 transform transition ${selectedSub === null ? 'ring-2 ring-primary/30' : ''}`}
             >
               <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center text-xl">{categoryEmojis[decodedCategory] || '🍽️'}</div>
               <div className="flex-1">
@@ -74,7 +74,7 @@ const CategoryPage = () => {
               <button
                 key={sub}
                 onClick={() => navigate(`/category/${encodeURIComponent(decodedCategory)}/${encodeURIComponent(sub)}`)}
-                className={`flex items-center gap-3 p-3 rounded-2xl bg-card hover:shadow-md hover:-translate-y-0.5 transform transition ${selectedSub === sub ? 'ring-2 ring-primary/30' : ''}`}
+                className={`flex items-start gap-3 p-3 rounded-2xl bg-card hover:shadow-md hover:-translate-y-0.5 transform transition ${selectedSub === sub ? 'ring-2 ring-primary/30' : ''}`}
               >
                 <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center text-xl">{decodedCategory === 'Drikke' ? (drinkSubcategoryEmojis[sub] || '🥤') : '📦'}</div>
                 <div className="flex-1">
