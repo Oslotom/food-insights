@@ -58,7 +58,7 @@ const CategoryPage = () => {
         </div>
 
         <div className="mb-6">
-          <h3 className="text-sm text-muted-foreground mb-3">Underkategorier</h3>
+          <h3 className="text-sm text-muted-foreground mb-3 text-left">Underkategorier</h3>
           <div className="flex flex-wrap gap-3 justify-start">
             <button
               onClick={() => navigate(`/category/${encodeURIComponent(decodedCategory)}`)}
