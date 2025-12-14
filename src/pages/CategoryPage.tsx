@@ -59,7 +59,7 @@ const CategoryPage = () => {
 
         <div className="mb-6">
           <h3 className="text-sm text-muted-foreground mb-3">Underkategorier</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          <div className="flex flex-wrap gap-3 justify-start">
             <button
               onClick={() => navigate(`/category/${encodeURIComponent(decodedCategory)}`)}
               className={`flex items-start gap-3 p-3 rounded-2xl bg-card hover:shadow-md hover:-translate-y-0.5 transform transition ${selectedSub === null ? 'ring-2 ring-primary/30' : ''}`}
