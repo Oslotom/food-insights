@@ -1,12 +1,208 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useMemo } from 'react';
+import { foods, categories } from '@/data/foodData';
+import { Food, Category, FilterState } from '@/types/food';
+import { Header } from '@/components/Header';
+import { SearchBar } from '@/components/SearchBar';
+import { CategoryPill } from '@/components/CategoryPill';
+import { FilterChips } from '@/components/FilterChips';
+import { FoodCard } from '@/components/FoodCard';
+import { FoodDetail } from '@/components/FoodDetail';
+import { StatsCard } from '@/components/StatsCard';
+import { Apple, ShieldCheck, AlertTriangle, Utensils } from 'lucide-react';
 
 const Index = () => {
+  const [filters, setFilters] = useState<FilterState>({
+    search: '',
+    category: 'Alle',
+    histaminSafe: false,
+    glutenFree: false,
+    lactoseFree: false,
+    lowFodmap: false,
+  });
+
+  const [selectedFood, setSelectedFood] = useState<Food | null>(null);
+
+  const filteredFoods = useMemo(() => {
+    return foods.filter((food) => {
+      // Search filter
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase();
+        if (!food.navn.toLowerCase().includes(searchLower) &&
+            !food.kategori.toLowerCase().includes(searchLower)) {
+          return false;
+        }
+      }
+
+      // Category filter
+      if (filters.category !== 'Alle' && food.kategori !== filters.category) {
+        return false;
+      }
+
+      // Tolerance filters
+      if (filters.histaminSafe && food.histamin_innhold !== 'Lav') {
+        return false;
+      }
+      if (filters.glutenFree && food.naturlig_glutenfri !== 'Ja') {
+        return false;
+      }
+      if (filters.lactoseFree && food.inneholder_laktose === 'Ja') {
+        return false;
+      }
+      if (filters.lowFodmap && food.fodmap_niva !== 'Lav') {
+        return false;
+      }
+
+      return true;
+    });
+  }, [filters]);
+
+  const stats = useMemo(() => {
+    const safeCount = foods.filter(f => 
+      f.histamin_innhold === 'Lav' && 
+      f.fodmap_niva === 'Lav' && 
+      f.toleranse_ved_ibs === 'God'
+    ).length;
+    
+    const cautionCount = foods.filter(f => 
+      f.histamin_innhold === 'Middels' || 
+      f.fodmap_niva === 'Middels' || 
+      f.toleranse_ved_ibs === 'Variabel'
+    ).length;
+
+    return {
+      total: foods.length,
+      safe: safeCount,
+      caution: cautionCount,
+    };
+  }, []);
+
+  const handleToggleFilter = (filter: keyof Pick<FilterState, 'glutenFree' | 'lactoseFree' | 'histaminSafe' | 'lowFodmap'>) => {
+    setFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <main className="container px-4 pb-8">
+        {/* Hero stats */}
+        <section className="py-6">
+          <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-4 px-4">
+            <StatsCard 
+              icon={Utensils}
+              label="Matvarer"
+              value={stats.total}
+              color="primary"
+            />
+            <StatsCard 
+              icon={ShieldCheck}
+              label="Trygge valg"
+              value={stats.safe}
+              color="safe"
+            />
+            <StatsCard 
+              icon={AlertTriangle}
+              label="Vær forsiktig"
+              value={stats.caution}
+              color="caution"
+            />
+          </div>
+        </section>
+
+        {/* Search */}
+        <section className="mb-4">
+          <SearchBar 
+            value={filters.search}
+            onChange={(value) => setFilters(prev => ({ ...prev, search: value }))}
+          />
+        </section>
+
+        {/* Filter chips */}
+        <section className="mb-4">
+          <FilterChips
+            glutenFree={filters.glutenFree}
+            lactoseFree={filters.lactoseFree}
+            histaminSafe={filters.histaminSafe}
+            lowFodmap={filters.lowFodmap}
+            onToggle={handleToggleFilter}
+          />
+        </section>
+
+        {/* Categories */}
+        <section className="mb-6">
+          <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 py-1">
+            {categories.map((category) => (
+              <CategoryPill
+                key={category}
+                category={category as Category}
+                isActive={filters.category === category}
+                onClick={() => setFilters(prev => ({ 
+                  ...prev, 
+                  category: category as Category 
+                }))}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Results count */}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-display font-semibold text-foreground">
+            {filteredFoods.length} matvarer
+          </h2>
+          {filters.search || filters.category !== 'Alle' || 
+           filters.glutenFree || filters.lactoseFree || 
+           filters.histaminSafe || filters.lowFodmap ? (
+            <button
+              onClick={() => setFilters({
+                search: '',
+                category: 'Alle',
+                histaminSafe: false,
+                glutenFree: false,
+                lactoseFree: false,
+                lowFodmap: false,
+              })}
+              className="text-sm text-primary font-medium hover:underline"
+            >
+              Nullstill filter
+            </button>
+          ) : null}
+        </div>
+
+        {/* Food list */}
+        <section className="space-y-3">
+          {filteredFoods.length > 0 ? (
+            filteredFoods.map((food, index) => (
+              <FoodCard
+                key={food.id}
+                food={food}
+                onClick={() => setSelectedFood(food)}
+                index={index}
+              />
+            ))
+          ) : (
+            <div className="text-center py-16">
+              <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                <Apple className="h-10 w-10 text-muted-foreground" />
+              </div>
+              <h3 className="font-display font-semibold text-foreground mb-2">
+                Ingen matvarer funnet
+              </h3>
+              <p className="text-muted-foreground text-sm max-w-xs mx-auto">
+                Prøv å justere søket eller filtrene for å finne det du leter etter.
+              </p>
+            </div>
+          )}
+        </section>
+      </main>
+
+      {/* Food detail modal */}
+      {selectedFood && (
+        <FoodDetail 
+          food={selectedFood}
+          onClose={() => setSelectedFood(null)}
+        />
+      )}
     </div>
   );
 };
