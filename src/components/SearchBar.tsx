@@ -6,9 +6,10 @@ interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
   onSearch: () => void;
+  onClear: () => void;
 }
 
-export function SearchBar({ value, onChange, onSearch }: SearchBarProps) {
+export function SearchBar({ value, onChange, onSearch, onClear }: SearchBarProps) {
   return (
     <div className="relative flex items-center">
       <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -28,7 +29,7 @@ export function SearchBar({ value, onChange, onSearch }: SearchBarProps) {
       />
       {value && (
         <button
-          onClick={() => onChange('')}
+          onClick={onClear}
           className="absolute right-24 top-1/2 -translate-y-1/2 p-1 rounded-full
             bg-muted hover:bg-muted/80 transition-colors"
         >

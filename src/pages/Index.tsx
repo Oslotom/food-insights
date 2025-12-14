@@ -80,6 +80,11 @@ const Index = () => {
     setSubmittedSearch(filters.search);
   };
 
+  const handleClearSearch = () => {
+    setFilters(prev => ({ ...prev, search: '' }));
+    setSubmittedSearch('');
+  };
+
   const handleToggleFilter = (filter: keyof Pick<FilterState, 'glutenFree' | 'lactoseFree' | 'histaminSafe' | 'lowFodmap'>) => {
     setFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
   };
@@ -104,6 +109,7 @@ const Index = () => {
             value={filters.search}
             onChange={(value) => setFilters(prev => ({ ...prev, search: value }))}
             onSearch={handleSearch}
+            onClear={handleClearSearch}
           />
         </section>
 
