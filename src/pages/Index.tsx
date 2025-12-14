@@ -108,14 +108,11 @@ const Index = () => {
       
       <main className="container px-4 pb-8">
         {/* Hero Banner */}
-        <section className="mb-8">
+        <section className="mb-6">
           <HeroBanner />
         </section>
 
-        {/* Categories */}
-        <CategorySection />
-
-        {/* Search */}
+        {/* Search - right after hero */}
         <section className="mb-4">
           <SearchBar 
             value={filters.search}
@@ -134,7 +131,7 @@ const Index = () => {
           />
         </section>
 
-        {/* Categories */}
+        {/* Category pills */}
         <section className="mb-6">
           <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 py-1">
             {categories.map((category) => (
@@ -152,7 +149,7 @@ const Index = () => {
         </section>
 
         {/* Results count */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between gap-4 mb-4 flex-wrap">
           <h2 className="font-display font-semibold text-foreground">
             {filteredFoods.length} matvarer
           </h2>
@@ -175,8 +172,8 @@ const Index = () => {
           ) : null}
         </div>
 
-        {/* Food list */}
-        <section className="space-y-3">
+        {/* Food list - search results */}
+        <section className="space-y-3 mb-8">
           {filteredFoods.length > 0 ? (
             filteredFoods.map((food, index) => (
               <FoodCard
@@ -206,6 +203,9 @@ const Index = () => {
             </div>
           )}
         </section>
+
+        {/* Categories section */}
+        <CategorySection />
 
         {/* Stats section */}
         <section className="py-6">
