@@ -3,6 +3,7 @@ export interface Food {
   navn: string;
   kategori: string;
   bearbeidingsgrad: string;
+  underkategori?: string;
   histamin_innhold: 'Lav' | 'Middels' | 'Høy';
   histaminfrigjorrer: string;
   dao_blokkerende: string;
@@ -41,6 +42,7 @@ export type Category =
   | 'Belgfrukt' 
   | 'Nøtter/Frø' 
   | 'Meieri'
+  | 'Drikke'
   | 'Alle';
 
 export interface FilterState {

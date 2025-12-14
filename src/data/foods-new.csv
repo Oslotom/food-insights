@@ -1,0 +1,5 @@
+navn,kategori,bearbeidingsgrad,histamin_innhold,histaminfrigjorrer,dao_blokkerende,typisk_reaksjon,inneholder_laktose,mengde_laktose,taltet_ved_laktoseintoleranse,inneholder_gluten,naturlig_glutenfri,trygg_for_coliaki,fodmap_niva,fodmap_typer,sulfitter,salicylater,tilstatt_gjaer,nitritter_nitrater,toleranse_ved_ibs,gassdannende,fiberinnhold,proteinkilde,fettkilde,karbo_kilde,viktige_mikronæringsstoffer,kaloritetthet
+Kyllingbryst (fersk),Kjøtt,Fersk,Lav,Nei,Nei,Sjelden problem,Nei,,Ja,Nei,Ja,Ja,Lav,,Nei,Lav,Nei,Nei,God,Lav,Lav,Ja,Nei,Nei,"B3, B6, selen",Lav
+Laks (fersk),Fisk,Fersk,Lav,Nei,Nei,Veldig godt tolerert,Nei,,Ja,Nei,Ja,Ja,Lav,,Nei,Lav,Nei,Nei,God,Lav,Lav,Ja,Ja,Nei,"D, B12, omega-3",Middels
+Egg (kokt),Egg,Fersk,Lav,Ja (hvite),Nei,Hvite kan være problem,Nei,,Ja,Nei,Ja,Ja,Lav,,Nei,Lav,Nei,Nei,God,Lav,Lav,Ja,Ja,Nei,"B12, D, kolin",Middels
+Quinoa (tørr),Korn,Tørket,Lav,Nei,Nei,Svært godt tolerert,Nei,,Ja,Nei,Ja,Ja,Lav,,Nei,Lav,Nei,Nei,God,Middels,Høy,Ja,Nei,Ja,"Jern, magnesium, fiber",Middels

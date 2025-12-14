@@ -1,13 +1,17 @@
 import { useState, useMemo } from 'react';
 import { foods, categories } from '@/data/foodData';
+import { useFavorites } from '@/hooks/useFavorites';
 import { Food, Category, FilterState } from '@/types/food';
 import { Header } from '@/components/Header';
+import { HeroBanner } from '@/components/HeroBanner';
+import { CategorySection } from '@/components/CategorySection';
 import { SearchBar } from '@/components/SearchBar';
 import { CategoryPill } from '@/components/CategoryPill';
 import { FilterChips } from '@/components/FilterChips';
 import { FoodCard } from '@/components/FoodCard';
 import { FoodDetail } from '@/components/FoodDetail';
 import { StatsCard } from '@/components/StatsCard';
+import { AddFoodDialog } from '@/components/AddFoodDialog';
 import { Apple, ShieldCheck, AlertTriangle, Utensils } from 'lucide-react';
 
 const Index = () => {
@@ -21,9 +25,13 @@ const Index = () => {
   });
 
   const [selectedFood, setSelectedFood] = useState<Food | null>(null);
+  const [customFoods, setCustomFoods] = useState<Food[]>([]);
+  const [addFoodOpen, setAddFoodOpen] = useState(false);
+  const { favorites } = useFavorites();
 
   const filteredFoods = useMemo(() => {
-    return foods.filter((food) => {
+    const allFoods = [...foods, ...customFoods];
+    const matched = allFoods.filter((food) => {
       // Search filter
       if (filters.search) {
         const searchLower = filters.search.toLowerCase();
@@ -54,7 +62,17 @@ const Index = () => {
 
       return true;
     });
-  }, [filters]);
+
+    // sort favorites to top
+    matched.sort((a, b) => {
+      const aFav = favorites.includes(a.id) ? 0 : 1;
+      const bFav = favorites.includes(b.id) ? 0 : 1;
+      if (aFav !== bFav) return aFav - bFav;
+      return a.navn.localeCompare(b.navn);
+    });
+
+    return matched;
+  }, [filters, favorites]);
 
   const stats = useMemo(() => {
     const safeCount = foods.filter(f => 
@@ -80,34 +98,22 @@ const Index = () => {
     setFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
   };
 
+  const handleAddFood = (newFood: Food) => {
+    setCustomFoods(prev => [...prev, newFood]);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
       <main className="container px-4 pb-8">
-        {/* Hero stats */}
-        <section className="py-6">
-          <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-4 px-4">
-            <StatsCard 
-              icon={Utensils}
-              label="Matvarer"
-              value={stats.total}
-              color="primary"
-            />
-            <StatsCard 
-              icon={ShieldCheck}
-              label="Trygge valg"
-              value={stats.safe}
-              color="safe"
-            />
-            <StatsCard 
-              icon={AlertTriangle}
-              label="Vær forsiktig"
-              value={stats.caution}
-              color="caution"
-            />
-          </div>
+        {/* Hero Banner */}
+        <section className="mb-8">
+          <HeroBanner />
         </section>
+
+        {/* Categories */}
+        <CategorySection />
 
         {/* Search */}
         <section className="mb-4">
@@ -188,11 +194,41 @@ const Index = () => {
               <h3 className="font-display font-semibold text-foreground mb-2">
                 Ingen matvarer funnet
               </h3>
-              <p className="text-muted-foreground text-sm max-w-xs mx-auto">
+              <p className="text-muted-foreground text-sm max-w-xs mx-auto mb-6">
                 Prøv å justere søket eller filtrene for å finne det du leter etter.
               </p>
+              <button
+                onClick={() => setAddFoodOpen(true)}
+                className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
+              >
+                Legg til
+              </button>
             </div>
           )}
+        </section>
+
+        {/* Stats section */}
+        <section className="py-6">
+          <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-4 px-4">
+            <StatsCard 
+              icon={Utensils}
+              label="Matvarer"
+              value={stats.total}
+              color="primary"
+            />
+            <StatsCard 
+              icon={ShieldCheck}
+              label="Trygge valg"
+              value={stats.safe}
+              color="safe"
+            />
+            <StatsCard 
+              icon={AlertTriangle}
+              label="Vær forsiktig"
+              value={stats.caution}
+              color="caution"
+            />
+          </div>
         </section>
       </main>
 
@@ -203,6 +239,14 @@ const Index = () => {
           onClose={() => setSelectedFood(null)}
         />
       )}
+
+      {/* Add food dialog */}
+      <AddFoodDialog
+        open={addFoodOpen}
+        onOpenChange={setAddFoodOpen}
+        onAddFood={handleAddFood}
+        searchQuery={filters.search}
+      />
     </div>
   );
 };

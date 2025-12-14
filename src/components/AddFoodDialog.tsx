@@ -1,0 +1,108 @@
+import { useState, useEffect } from 'react';
+import { Food } from '@/types/food';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Loader2 } from 'lucide-react';
+import { analyzeFoodName } from '@/lib/foodAnalyzer';
+
+interface AddFoodDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onAddFood: (food: Food) => void;
+  searchQuery?: string;
+}
+
+export function AddFoodDialog({ open, onOpenChange, onAddFood, searchQuery = '' }: AddFoodDialogProps) {
+  const [foodName, setFoodName] = useState(searchQuery);
+  const [loading, setLoading] = useState(false);
+
+  // Update foodName when dialog opens with new searchQuery
+  useEffect(() => {
+    if (open) {
+      setFoodName(searchQuery);
+    }
+  }, [open, searchQuery]);
+
+  const handleAddFood = async () => {
+    if (!foodName.trim()) return;
+
+    setLoading(true);
+    try {
+      // Simulate a small delay for better UX
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Use client-side analyzer to get food data
+      const analyzedData = analyzeFoodName(foodName.trim());
+      
+      const newFood: Food = {
+        id: `custom-${Date.now()}`,
+        navn: foodName.trim(),
+        ...analyzedData,
+      };
+
+      onAddFood(newFood);
+      setFoodName('');
+      onOpenChange(false);
+    } catch (error) {
+      console.error('Error adding food:', error);
+      alert('Kunne ikke legge til matvare. Prøv igjen.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Legg til ny matvare</DialogTitle>
+          <DialogDescription>
+            Skriv inn matvarens navn, og vi vil analysere den for deg.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid gap-2">
+            <Label htmlFor="food-name">Matvarenavn</Label>
+            <Input
+              id="food-name"
+              placeholder="f.eks. Brokkoli, Kyllingbryst, etc."
+              value={foodName}
+              onChange={(e) => setFoodName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !loading) {
+                  handleAddFood();
+                }
+              }}
+              disabled={loading}
+              autoFocus
+            />
+          </div>
+        </div>
+        <div className="flex gap-2 justify-end">
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={loading}
+          >
+            Avbryt
+          </Button>
+          <Button
+            onClick={handleAddFood}
+            disabled={!foodName.trim() || loading}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Analyserer...
+              </>
+            ) : (
+              'Legg til'
+            )}
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}

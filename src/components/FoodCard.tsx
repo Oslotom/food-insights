@@ -42,8 +42,8 @@ export function FoodCard({ food, onClick, index }: FoodCardProps) {
     <button
       onClick={onClick}
       className={cn(
-        'w-full p-4 rounded-2xl bg-card border border-border/50',
-        'flex items-center gap-4 text-left',
+        'w-full p-3 rounded-2xl bg-card border border-border/50',
+        'flex items-center gap-3 text-left',
         'transition-all duration-300 ease-out',
         'hover:shadow-medium hover:border-primary/20 hover:-translate-y-0.5',
         'active:scale-[0.98] animate-fade-in',
@@ -52,30 +52,45 @@ export function FoodCard({ food, onClick, index }: FoodCardProps) {
       style={{ animationDelay: `${index * 50}ms` }}
     >
       {/* Emoji avatar */}
-      <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-2xl
+      <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-2xl
         group-hover:scale-110 transition-transform duration-300">
         {categoryEmojis[food.kategori] || '🍽️'}
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <h3 className="font-display font-semibold text-foreground truncate text-base">
-          {food.navn}
-        </h3>
-        <p className="text-sm text-muted-foreground mt-0.5">
-          {food.kategori} · {food.bearbeidingsgrad}
-        </p>
-        
-        {/* Quick status badges */}
-        <div className="flex flex-wrap gap-1.5 mt-2">
-          <span className={cn(
-            'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium',
-            statusColors[status]
-          )}>
-            {statusIcon[status]}
-            {label}
-          </span>
+        {/* Name and Histamine bar in same line */}
+        <div className="flex items-center gap-2">
+          <h3 className="font-display font-semibold text-foreground truncate text-base">
+            {food.navn}
+          </h3>
+          <div className="flex items-center gap-1.5 flex-1">
+            <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
+              <div
+                className={cn(
+                  'h-full rounded-full transition-all',
+                  food.histamin_innhold === 'Lav' && 'w-1/3 bg-safe',
+                  food.histamin_innhold === 'Middels' && 'w-2/3 bg-caution',
+                  food.histamin_innhold === 'Høy' && 'w-full bg-danger'
+                )}
+              />
+            </div>
+            <span className="text-xs text-muted-foreground whitespace-nowrap">{food.histamin_innhold}</span>
+          </div>
         </div>
+        
+        {/* Quick status badges - only show if not safe */}
+        {status !== 'safe' && (
+          <div className="flex flex-wrap gap-1.5 mt-1.5">
+            <span className={cn(
+              'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium',
+              statusColors[status]
+            )}>
+              {statusIcon[status]}
+              {label}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Arrow */}

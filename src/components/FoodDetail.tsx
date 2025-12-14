@@ -4,6 +4,8 @@ import { categoryEmojis } from '@/data/foodData';
 import { X, Wheat, Droplets, Beaker, Activity, Flame, Dumbbell, Apple } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
+import { Star } from 'lucide-react';
+import { useFavorites } from '@/hooks/useFavorites';
 
 interface FoodDetailProps {
   food: Food;
@@ -11,6 +13,7 @@ interface FoodDetailProps {
 }
 
 export function FoodDetail({ food, onClose }: FoodDetailProps) {
+  const { isFavorite, toggleFavorite } = useFavorites();
   const levelToNumber = (level: string) => {
     switch (level.toLowerCase()) {
       case 'lav': return 1;
@@ -112,6 +115,18 @@ export function FoodDetail({ food, onClose }: FoodDetailProps) {
                 {food.kategori} · {food.bearbeidingsgrad}
               </p>
             </div>
+          </div>
+          <div className="absolute top-4 left-6 flex items-center gap-2">
+            <button
+              onClick={() => toggleFavorite(food.id)}
+              className={cn(
+                'p-2 rounded-md flex items-center justify-center transition',
+                isFavorite(food.id) ? 'bg-yellow-100 text-yellow-600' : 'bg-secondary'
+              )}
+              aria-label={isFavorite(food.id) ? 'Fjern fra favoritter' : 'Legg til i favoritter'}
+            >
+              <Star className="h-5 w-5" />
+            </button>
           </div>
 
           {/* Typical reaction */}
@@ -252,6 +267,42 @@ export function FoodDetail({ food, onClose }: FoodDetailProps) {
                   {food.trygg_for_coliaki}
                 </span>
               </div>
+              {food.histaminfrigjorrer && food.histaminfrigjorrer !== '' && (
+                <div className="flex justify-between py-2 border-b border-border/50">
+                  <span className="text-muted-foreground">Histaminfrigjørrer</span>
+                  <span className="font-medium text-foreground">{food.histaminfrigjorrer}</span>
+                </div>
+              )}
+              {food.dao_blokkerende && food.dao_blokkerende !== '' && (
+                <div className="flex justify-between py-2 border-b border-border/50">
+                  <span className="text-muted-foreground">DAO-blokkerende</span>
+                  <span className="font-medium text-foreground">{food.dao_blokkerende}</span>
+                </div>
+              )}
+              {food.sulfitter && food.sulfitter !== '' && (
+                <div className="flex justify-between py-2 border-b border-border/50">
+                  <span className="text-muted-foreground">Sulfitter</span>
+                  <span className="font-medium text-foreground">{food.sulfitter}</span>
+                </div>
+              )}
+              {food.salicylater && food.salicylater !== '' && (
+                <div className="flex justify-between py-2 border-b border-border/50">
+                  <span className="text-muted-foreground">Salicylater</span>
+                  <span className="font-medium text-foreground">{food.salicylater}</span>
+                </div>
+              )}
+              {food.nitritter_nitrater && food.nitritter_nitrater !== '' && (
+                <div className="flex justify-between py-2 border-b border-border/50">
+                  <span className="text-muted-foreground">Nitritter/Nitrater</span>
+                  <span className="font-medium text-foreground">{food.nitritter_nitrater}</span>
+                </div>
+              )}
+              {food.tilstatt_gjaer && food.tilstatt_gjaer !== '' && (
+                <div className="flex justify-between py-2 border-b border-border/50">
+                  <span className="text-muted-foreground">Tilsatt gjær</span>
+                  <span className="font-medium text-foreground">{food.tilstatt_gjaer}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
