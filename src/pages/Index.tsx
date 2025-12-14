@@ -132,32 +132,6 @@ const Index = () => {
           <HeroBanner />
         </section>
 
-        {/* Search */}
-        <section className="mb-4">
-          <SearchBar 
-            value={filters.search}
-            onChange={(value) => setFilters(prev => ({ ...prev, search: value }))}
-            onSearch={handleSearch}
-            onClear={handleClearSearch}
-          />
-        </section>
-
-        {/* Search Results */}
-        {submittedSearch && (
-          <section className="mb-6">
-            <h2 className="font-display font-semibold text-foreground mb-3">Søkeresultater</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {searchResults.map((food) => (
-                <FoodTile 
-                  key={food.id}
-                  food={food}
-                  onClick={() => setSelectedFood(food)}
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
         {/* Categories */}
         <CategorySection />
 
