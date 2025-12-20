@@ -98,9 +98,14 @@ const Index = () => {
       <Header />
       
       <main className="container px-4 pb-8">
-        {/* Hero Banner */}
+        {/* Hero Banner with Search */}
         <section className="mb-6">
-          <HeroBanner />
+          <HeroBanner
+            searchValue={filters.search}
+            onSearchChange={(value) => setFilters(prev => ({ ...prev, search: value }))}
+            onSearch={handleSearch}
+            onClear={handleClearSearch}
+          />
         </section>
 
         {/* Categories */}
