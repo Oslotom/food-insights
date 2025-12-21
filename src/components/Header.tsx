@@ -1,6 +1,11 @@
 import { Salad, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-export function Header() {
+interface HeaderProps {
+  onAddClick: () => void;
+}
+
+export function Header({ onAddClick }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 glass-strong">
       <div className="container px-4 py-4">
@@ -22,6 +27,7 @@ export function Header() {
               </p>
             </div>
           </div>
+          <Button onClick={onAddClick}>Legg til</Button>
         </div>
       </div>
     </header>
