@@ -32,8 +32,6 @@ jobs:
 
       - name: Build
         run: npm run build
-        env:
-          NODE_ENV: production
 
       - name: Add .nojekyll
         run: touch dist/.nojekyll
