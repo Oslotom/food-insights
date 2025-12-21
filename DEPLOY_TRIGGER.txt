@@ -1,0 +1,3 @@
+Deployment trigger for GitHub Pages
+Updated: 2025-12-21 15:30
+Configuration: Production base path /food-insights/
