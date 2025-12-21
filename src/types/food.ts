@@ -28,6 +28,9 @@ export interface Food {
   karbo_kilde: string;
   viktige_mikronæringsstoffer: string;
   kaloritetthet: 'Lav' | 'Middels' | 'Høy';
+  bedre_tolerert?: string;
+  unnga_hvis?: string;
+  tryggere_alternativ?: string;
 }
 
 export type ToleranceLevel = 'Lav' | 'Middels' | 'Høy' | 'God' | 'Variabel' | 'Dårlig';
