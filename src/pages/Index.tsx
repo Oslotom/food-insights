@@ -9,7 +9,7 @@ import { SearchBar } from '@/components/SearchBar';
 import { CategoryPill } from '@/components/CategoryPill';
 import { FilterChips } from '@/components/FilterChips';
 import { FoodDetail } from '@/components/FoodDetail';
-import { AddFood } from '@/components/AddFood';
+import { AddFoodDialog } from '@/components/AddFoodDialog';
 import { FoodTile } from '@/components/FoodTile';
 
 const Index = () => {
@@ -25,7 +25,7 @@ const Index = () => {
   const [submittedSearch, setSubmittedSearch] = useState('');
   const [selectedFood, setSelectedFood] = useState<Food | null>(null);
   const [customFoods, setCustomFoods] = useState<Food[]>([]);
-  const [showAddFood, setShowAddFood] = useState(false);
+  const [addFoodOpen, setAddFoodOpen] = useState(false);
   const { favorites } = useFavorites();
 
   const searchResults = useMemo(() => {
@@ -80,53 +80,19 @@ const Index = () => {
     setSubmittedSearch(filters.search);
   };
 
-  const handleClearSearch = () => {
-    setFilters(prev => ({ ...prev, search: '' }));
-    setSubmittedSearch('');
-  };
-
   const handleToggleFilter = (filter: keyof Pick<FilterState, 'glutenFree' | 'lactoseFree' | 'histaminSafe' | 'lowFodmap'>) => {
     setFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
   };
 
-  const handleAddFoodClick = () => {
-    setShowAddFood(prev => !prev);
-  };
-
-  const handleAddNewFood = async (foodName: string) => {
-    try {
-      const response = await fetch('http://localhost:3001/api/food', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ foodName }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to add food');
-      }
-
-      const newFood = await response.json();
-      setCustomFoods(prev => [...prev, newFood]);
-      setShowAddFood(false);
-    } catch (error) {
-      console.error('Error adding new food:', error);
-    }
+  const handleAddFood = (newFood: Food) => {
+    setCustomFoods(prev => [...prev, newFood]);
   };
 
   return (
     <div className="min-h-screen bg-background">
-      <Header onAddClick={handleAddFoodClick} />
+      <Header />
       
       <main className="container px-4 pb-8">
-        {/* Add Food */}
-        {showAddFood && (
-          <section className="mb-6">
-            <AddFood onAdd={handleAddNewFood} />
-          </section>
-        )}
-
         {/* Hero Banner */}
         <section className="mb-6">
           <HeroBanner />
@@ -138,7 +104,6 @@ const Index = () => {
             value={filters.search}
             onChange={(value) => setFilters(prev => ({ ...prev, search: value }))}
             onSearch={handleSearch}
-            onClear={handleClearSearch}
           />
         </section>
 
@@ -197,6 +162,14 @@ const Index = () => {
           onClose={() => setSelectedFood(null)}
         />
       )}
+
+      {/* Add food dialog */}
+      <AddFoodDialog
+        open={addFoodOpen}
+        onOpenChange={setAddFoodOpen}
+        onAddFood={handleAddFood}
+        searchQuery={filters.search}
+      />
     </div>
   );
 };
